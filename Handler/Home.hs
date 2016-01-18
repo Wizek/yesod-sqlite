@@ -17,6 +17,7 @@ getHomeR = do
     (formWidget, formEnctype) <- generateFormPost sampleForm
     let submission = Nothing :: Maybe (FileInfo, Text)
         handlerName = "getHomeR" :: Text
+    comments <- getComments
     defaultLayout $ do
         let (commentFormId, commentTextareaId, commentListId) = commentIds
         aDomId <- newIdent
@@ -31,11 +32,17 @@ postHomeR = do
             FormSuccess res -> Just res
             _ -> Nothing
 
+    comments <- getComments
     defaultLayout $ do
         let (commentFormId, commentTextareaId, commentListId) = commentIds
         aDomId <- newIdent
         setTitle "Welcome To Yesod!"
         $(widgetFile "homepage")
+
+getComments = do
+    comments <- runDB $ selectList [] []
+    liftIO $ print $ (comments :: [Entity Comment])
+    return comments
 
 sampleForm :: Form (FileInfo, Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)

@@ -64,6 +64,8 @@
         Create comment
 
     <ul ##{commentListId}>
+      $forall (Entity _ (Comment{commentMessage=msg})) <- comments
+        <li> #{ msg }
 
 <section.page-header>
   <h2>Testing
